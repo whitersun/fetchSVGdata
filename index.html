@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Practice</title>
+</head>
+<body>
+
+    <select name="icon" id="iconID">
+        <option value="" selected disabled>Select icon</option>
+        <option value="bluetooth">Bluetooth</option>
+        <option value="camera">Camera</option>
+
+    </select>
+
+    <div id="app" class="app"></div>
+
+
+    <script>
+        const xmlHttp = new XMLHttpRequest();
+        const app = document.querySelector('#app');
+        let text = '';
+
+        // using document createRange for document fragment
+        // createContextFragment prevent xss attack from hacker
+        function AppendElementValue (targetString) {
+            // create fragment for svg
+
+            (app.children.length > 0) && app.children[0].remove();
+
+            var range = document.createRange();
+
+            // Make the parent of the first div in the document become the context node
+            range.selectNode(app);
+            const documentFragment = range.createContextualFragment(targetString);
+            return app.append(documentFragment);
+        }
+
+
+        async function FetchJsonData() {
+            const response = await fetch('./data.json');
+            const fetchData = await response.json();
+
+            return { fetchData };
+        }
+
+
+        async function ReloadDocumentFragment() {
+            const { fetchData } = await FetchJsonData();
+            const convertNewData = [...fetchData.feather];
+
+            var select = document.getElementById('iconID');
+
+            select.addEventListener('change', function(e) {
+                console.log(e.target.value);
+
+                const isHaveData = convertNewData.find(item => item.value === e.target.value);
+
+                function XMLHttpRequestExternal() {
+                    xmlHttp.open('GET', isHaveData.direction, false);
+
+                    xmlHttp.send();
+
+                    text = xmlHttp.responseText;
+                    (text) && AppendElementValue(text)
+                
+
+                    if (app.children.length) {
+                        // console.dir(app.children[0]);
+                        const isTextSVGElement = app.children[0].children
+                        const convertToNewArray = [].slice.call(isTextSVGElement);
+                        // console.log(convertToNewArray)
+
+                        const isHaveTextSVG = convertToNewArray.find(item => item.localName === 'text')
+                        console.log(isHaveTextSVG)
+                        // if (isTextSVGElement !== 'text') return;`
+
+                    }
+                }
+
+                return (isHaveData) && XMLHttpRequestExternal(); 
+            })
+        }
+
+        document.addEventListener('DOMContentLoaded', ReloadDocumentFragment)
+    </script>
+</body>
+</html>

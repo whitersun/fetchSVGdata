@@ -1,0 +1,15 @@
+{
+    "feather": [
+        {
+            "id": 1,
+            "value": "bluetooth",
+            "direction": "./bluetooth.svg"
+        },
+
+        {
+            "id": 2,
+            "value": "camera",
+            "direction": "./camera.svg"
+        }
+    ]
+}
